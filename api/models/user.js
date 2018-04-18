@@ -6,9 +6,10 @@ const userSchema = mongoose.Schema({
     clientId: { type: Number, require: true},
     country: { type: String },
     tierId: Number,
-    extraDetails : mongoose.Schema.Types.Mixed,
-    createDate: Date,
-    updateDate: Date
+    extraDetails : mongoose.Schema.Types.Mixed
+},
+{
+    timestamps: true
 });
 
 module.exports = mongoose.model('User', userSchema);
