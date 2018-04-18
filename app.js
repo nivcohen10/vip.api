@@ -33,19 +33,45 @@ app.use('/transactions', transactionsRoutes);
 
 // mothed not found error
 app.use((req, res, next) => {
-    const error = new Error('method not found');
-    error.status = HttpStatus.NOT_FOUND;
-    next(error);
+    try {
+        const error = new Error('method not found');
+        error.status = HttpStatus.NOT_FOUND;
+        next(error);
+    }
+    catch (err){
+        next(err);
+    }
 });
 
+// log error
 app.use((error, req, res, next) => {
-    new ErrorHandler (req, error).LogError();
-    res.status(error.status || HttpStatus.INTERNAL_SERVER_ERROR)
+    try{
+        new ErrorHandler (req, error).LogError();    
+        next(error);
+    }
+    catch (err){
+        next(err);        
+    }
+})
+
+// return error
+app.use((error, req, res, next) => {
+    if (error.status && error.status != HttpStatus.INTERNAL_SERVER_ERROR){
+        res.status(error.status)
         .json({
             error: {
                 message: error.message
             }
+        });    
+    }
+    else {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({
+            error: {
+                message: "general error"
+            }
         });
+    }
 });
 
 module.exports = app;

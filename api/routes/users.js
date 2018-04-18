@@ -49,11 +49,11 @@ router.post('/:id', (req, res, next) => {
         .then(result => {
             console.log(result);
             res.status(HttpStatus.CREATED).json({
-                message: 'Handling POST requests to /users',
+                message: 'user created',
                 created_user: result
             });
         })
-    .catch(err => console.log(err));
+    .catch(err => next(err));
 });
 
 router.put('/:id', (req, res, next) => {
@@ -65,7 +65,7 @@ router.put('/:id', (req, res, next) => {
     });
     User.update({userId: userId}, {$set: updateOps}).exec()
     .then(result => res.status(HttpStatus.OK).json(result))
-    .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({error: err}));
+    .catch(err => next(err));
 });
 
 // Product Example

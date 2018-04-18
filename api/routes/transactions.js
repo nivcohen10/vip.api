@@ -8,16 +8,10 @@ const Transaction = require('../models/transaction');
 router.get('/', (req, res, next) => {
     Transaction.find()
     .exec()
-    .then(docs => 
-        {
-        if (docs.length > 0){
+    .then(docs => {
             res.status(HttpStatus.OK).json(docs);
-        }
-        else{
-            next();
-        }
     })
-    .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({error: err}))
+    .catch(err => next(err))
 });
 
 
@@ -31,11 +25,11 @@ router.post('/', (req, res, next) => {
     .then(result => {
         console.log(result);
         res.status(HttpStatus.CREATED).json({
-            message: 'Handling POST requests to /transactions',
+            message: 'transaction created',
             created_transaction: result
         });
     })
-    .catch(err => console.log(err));
+    .catch(err => next(err));
 });
 
 module.exports = router;
