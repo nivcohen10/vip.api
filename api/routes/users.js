@@ -3,9 +3,73 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const HttpStatus = require('http-status-codes');
 
-const Product = require('../models/product');
+const User = require('../models/user');
 
 router.get('/', (req, res, next) => {
+    //console.log(req.headers.clientid);
+    User.find()
+        .exec()
+        .then(docs => {
+            if (docs.length > 0){
+                res.status(HttpStatus.OK).json(result);
+            }
+            else{
+                next();
+            }
+        })
+        .catch(err => {
+             next(err);
+        })
+});
+
+router.post('/:id', (req, res, next) => {
+    
+    console.log(req.params.id);
+    User.find({userId: req.params.id})
+        .exec()
+        .then(doc => {
+            if (doc.length > 0){
+                res.status(HttpStatus.BAD_REQUEST).json({error: "User [" + req.params.id + "] already exist"})
+            }
+        });
+
+    const user = new User ({
+        _id: mongoose.Types.ObjectId(),
+        userId: req.params.id,
+        clientId: 123,
+        country: req.body.country,
+        tierId: 0,
+        extraDetails : req.body.extraDetails,
+        createDate: Date.now(),
+        updateDate: Date.now()
+    });
+
+    user
+        .save()
+        .then(result => {
+            console.log(result);
+            res.status(HttpStatus.CREATED).json({
+                message: 'Handling POST requests to /users',
+                created_user: result
+            });
+        })
+    .catch(err => console.log(err));
+});
+
+router.put('/:id', (req, res, next) => {
+    const userId = req.params.id;
+    const updateOps = {};
+    console.log(req.body);
+    req.body.forEach(element => {
+        updateOps[element.propName] = element.value;
+    });
+    User.update({userId: userId}, {$set: updateOps}).exec()
+    .then(result => res.status(HttpStatus.OK).json(result))
+    .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({error: err}));
+});
+
+// Product Example
+/* router.get('/', (req, res, next) => {
     Product.find()
     .select("name price _id")
     .exec()
@@ -87,6 +151,6 @@ router.post('/', (req, res, next) => {
     .catch(err => console.log(err));
 
     
-});
+}); */
 
 module.exports = router;

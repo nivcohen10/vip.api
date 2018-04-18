@@ -3,10 +3,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const HttpStatus = require('http-status-codes');
-
+const ErrorHandler = require('./common/errorHandler')
 const app = express();
 
-const productRoutes = require('./api/routes/products');
+const usersRoutes = require('./api/routes/users');
 const transactionsRoutes = require('./api/routes/transactions');
 
 
@@ -27,9 +27,8 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/products', productRoutes);
+app.use('/users', usersRoutes);
 app.use('/transactions', transactionsRoutes);
-
 
 app.use((req, res, next) => {
     const error = new Error('Not Found');
@@ -38,6 +37,11 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
+    //console.log(req.url, req.method);
+    //console.log(req.headers, req.body, req.params);
+    //console.log(error);
+    new ErrorHandler (req, error).LogError();
+
     res.status(error.status || HttpStatus.INTERNAL_SERVER_ERROR)
         .json({
             error: {
