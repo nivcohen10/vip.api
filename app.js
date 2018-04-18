@@ -8,7 +8,8 @@ const app = express();
 const usersRoutes = require('./api/routes/users');
 const transactionsRoutes = require('./api/routes/transactions');
 
-mongoose.connect('mongodb://node-api:node-api@node-api-shard-00-00-fasjx.mongodb.net:27017,node-api-shard-00-01-fasjx.mongodb.net:27017,node-api-shard-00-02-fasjx.mongodb.net:27017/test?ssl=true&replicaSet=node-api-shard-0&authSource=admin', );
+const dbName = process.env.DB_NAME || "test";
+mongoose.connect('mongodb://node-api:node-api@node-api-shard-00-00-fasjx.mongodb.net:27017,node-api-shard-00-01-fasjx.mongodb.net:27017,node-api-shard-00-02-fasjx.mongodb.net:27017/'+ dbName +'?ssl=true&replicaSet=node-api-shard-0&authSource=admin', );
 
 app.listen(process.env.PORT || 5000, () => {
     console.log(app.get('env'))

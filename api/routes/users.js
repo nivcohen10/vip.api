@@ -11,7 +11,7 @@ router.get('/', (req, res, next) => {
         .exec()
         .then(docs => {
             if (docs.length > 0){
-                res.status(HttpStatus.OK).json(result);
+                res.status(HttpStatus.OK).json(docs);
             }
             else{
                 next();
