@@ -2,20 +2,15 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const HttpStatus = require('http-status-codes');
-
+const checkAuth = require('../middleware/check-auth')
 const User = require('../models/user');
 
 router.get('/', (req, res, next) => {
     //console.log(req.headers.clientid);
-    User.find()
+    User.find({clientId: req.headers.clientid})
         .exec()
         .then(docs => {
-            if (docs.length > 0){
                 res.status(HttpStatus.OK).json(docs);
-            }
-            else{
-                next();
-            }
         })
         .catch(err => {
              next(err);
@@ -23,9 +18,8 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/:id', (req, res, next) => {
-    
     console.log(req.params.id);
-    User.find({userId: req.params.id})
+    User.find({clientId: req.headers.clientid, userId: req.params.id})
         .exec()
         .then(doc => {
             if (doc.length > 0){
@@ -63,7 +57,7 @@ router.put('/:id', (req, res, next) => {
     req.body.forEach(element => {
         updateOps[element.propName] = element.value;
     });
-    User.update({userId: userId}, {$set: updateOps}).exec()
+    User.update({clientId: req.headers.clientid, userId: userId}, {$set: updateOps}).exec()
     .then(result => res.status(HttpStatus.OK).json(result))
     .catch(err => next(err));
 });

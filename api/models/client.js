@@ -11,6 +11,12 @@ const clientSchema = mongoose.Schema({
         }
     ],
     apiKey: {type: String , require: true},
+    whitelistedIPs : [ 
+        {
+            ipAdress: String
+        }
+    ],
+    active: Boolean
 },
 {
     timestamps: true

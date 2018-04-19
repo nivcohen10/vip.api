@@ -4,9 +4,11 @@ const mongoose = require('mongoose');
 const HttpStatus = require('http-status-codes');
 const ErrorHandler = require('./common/errorHandler')
 const app = express();
+const checkAuth = require('./api/middleware/check-auth')
 
 const usersRoutes = require('./api/routes/users');
 const transactionsRoutes = require('./api/routes/transactions');
+const clientsRoutes = require ('./api/routes/clients');
 
 const dbName = process.env.DB_NAME || "test";
 mongoose.connect('mongodb://node-api:node-api@node-api-shard-00-00-fasjx.mongodb.net:27017,node-api-shard-00-01-fasjx.mongodb.net:27017,node-api-shard-00-02-fasjx.mongodb.net:27017/'+ dbName +'?ssl=true&replicaSet=node-api-shard-0&authSource=admin', );
@@ -28,11 +30,13 @@ app.use((req, res, next) => {
 });
 
 // router
-app.use('/users', usersRoutes);
+app.use('/users', checkAuth, usersRoutes);
 app.use('/transactions', transactionsRoutes);
+app.use('/clients', clientsRoutes);
 
 // mothed not found error
 app.use((req, res, next) => {
+    console.log('in method not found')
     try {
         const error = new Error('method not found');
         error.status = HttpStatus.NOT_FOUND;
@@ -45,6 +49,9 @@ app.use((req, res, next) => {
 
 // log error
 app.use((error, req, res, next) => {
+    console.log(error.message);
+    console.log(error.status);
+    
     try{
         new ErrorHandler (req, error).LogError();    
         next(error);
@@ -56,6 +63,9 @@ app.use((error, req, res, next) => {
 
 // return error
 app.use((error, req, res, next) => {
+    console.log(error.message);
+    console.log(error.status);    
+        
     if (error.status && error.status != HttpStatus.INTERNAL_SERVER_ERROR){
         res.status(error.status)
         .json({
