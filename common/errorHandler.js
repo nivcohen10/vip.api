@@ -17,7 +17,8 @@ class ErrorHandler {
             params: this.req.params,
             body: this.req.body,
             url: this.req.url,
-            method: this.req.method
+            method: this.req.method,
+            ip : this.req.ip
         },
         error: {
           name: this.err.name,
