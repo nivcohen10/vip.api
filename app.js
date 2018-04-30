@@ -7,7 +7,7 @@ const app = express();
 const checkAuth = require('./api/middleware/check-auth')
 
 const customersRoutes = require('./api/routes/customers');
-const transactionsRoutes = require('./api/routes/transactions');
+const rulesRoutes = require('./api/routes/rules');
 const partnersRoutes = require ('./api/routes/partners');
 
 const dbName = process.env.DB_NAME || "test";
@@ -33,7 +33,7 @@ app.use((req, res, next) => {
 
 // router
 app.use('/customers', checkAuth, customersRoutes);
-//app.use('/transactions', transactionsRoutes);
+app.use('/rules',checkAuth, rulesRoutes);
 app.use('/partners', partnersRoutes);
 
 // mothed not found error
