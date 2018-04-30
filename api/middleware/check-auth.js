@@ -16,7 +16,7 @@ module.exports = (req, res, next) => {
                 next();
             }
             else {
-                const err = new Error("invalid partnerid or apiKey or ip");
+                const err = new Error("invalid partnerid or apiKey or ip " + doc);
                 err.status = HttpStatus.BAD_REQUEST;
                 next(err);
             }
