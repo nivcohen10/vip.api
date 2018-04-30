@@ -12,7 +12,8 @@ module.exports = (req, res, next) => {
             //console.log(doc)
             if (doc
                 && doc.apiKey == req.headers.apikey
-                && doc.whitelistedIPs.includes(req.ip)) {
+                //&& doc.whitelistedIPs.includes(req.ip)
+            ) {
                 next();
             }
             else {
