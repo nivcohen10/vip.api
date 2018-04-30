@@ -1,4 +1,4 @@
-const ErrorObj = require('../common/models/error');
+const ErrorObj = require('./../repository/models/error');
 const mongoose = require('mongoose');
 
 class ErrorHandler {
@@ -11,7 +11,7 @@ class ErrorHandler {
     LogError() {
       const error = new ErrorObj ({
         _id: mongoose.Types.ObjectId(),
-        clientId: this.req.headers.clientid,
+        partnerId: this.req.headers.partnerid,
         req: {
             headers: this.req.headers,
             params: this.req.params,

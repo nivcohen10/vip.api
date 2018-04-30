@@ -6,12 +6,14 @@ const ErrorHandler = require('./common/errorHandler')
 const app = express();
 const checkAuth = require('./api/middleware/check-auth')
 
-const usersRoutes = require('./api/routes/users');
+const customersRoutes = require('./api/routes/customers');
 const transactionsRoutes = require('./api/routes/transactions');
-const clientsRoutes = require ('./api/routes/clients');
+const partnersRoutes = require ('./api/routes/partners');
 
 const dbName = process.env.DB_NAME || "test";
 mongoose.connect('mongodb://node-api:node-api@node-api-shard-00-00-fasjx.mongodb.net:27017,node-api-shard-00-01-fasjx.mongodb.net:27017,node-api-shard-00-02-fasjx.mongodb.net:27017/'+ dbName +'?ssl=true&replicaSet=node-api-shard-0&authSource=admin', );
+
+const _errorHandler = new ErrorHandler();
 
 app.listen(process.env.PORT || 5000, () => {
     console.log(app.get('env'))
@@ -30,9 +32,9 @@ app.use((req, res, next) => {
 });
 
 // router
-app.use('/users', checkAuth, usersRoutes);
-app.use('/transactions', transactionsRoutes);
-app.use('/clients', clientsRoutes);
+app.use('/customers', checkAuth, customersRoutes);
+//app.use('/transactions', transactionsRoutes);
+app.use('/partners', partnersRoutes);
 
 // mothed not found error
 app.use((req, res, next) => {

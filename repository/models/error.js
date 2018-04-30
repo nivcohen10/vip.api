@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const errorSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    clientId: Number,
+    partnerId: Number,
     req: mongoose.Schema.Types.Mixed,
     error: mongoose.Schema.Types.Mixed,
     createDate: Date
