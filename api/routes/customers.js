@@ -33,7 +33,9 @@ router.get('/:id', async (req, res, next) => {
         const customer = await _customerRepository.FindCustomer(req.headers.partnerid, req.params.id);
         if (customer) {
             res.status(HttpStatus.OK).json(customer);
-            return;
+        }
+        else {
+            res.status(HttpStatus.NOT_FOUND).json({});
         }
     }
     catch (err) {
@@ -55,17 +57,14 @@ router.post('/:id', async (req, res, next) => {
         return;
     }
 
-    try {
-        _customerRepository.CreateNewCustomer(req).then(result => {
-            res.status(HttpStatus.CREATED).json({
-                message: 'customer created',
-                created_customer: result
-            });
+    _customerRepository.CreateNewCustomer(req).then(result => {
+        res.status(HttpStatus.CREATED).json({
+            message: 'customer created',
+            created_customer: result
         });
-    } catch (error) {
-        next(error)
-        return;
-    }
+    }).catch(err => {
+        next(err)
+    });
 });
 
 router.patch('/:id', async (req, res, next) => {

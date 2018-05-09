@@ -32,8 +32,11 @@ app.use((req, res, next) => {
 });
 
 // router
-app.use('/customers', checkAuth, customersRoutes);
-app.use('/rules',checkAuth, rulesRoutes);
+//app.use('/customers', checkAuth, customersRoutes);
+//app.use('/rules',checkAuth, rulesRoutes);
+
+app.use('/customers', customersRoutes);
+app.use('/rules', rulesRoutes);
 app.use('/partners', partnersRoutes);
 
 // mothed not found error
